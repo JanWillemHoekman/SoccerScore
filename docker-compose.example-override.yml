@@ -1,0 +1,30 @@
+version: "3.8"
+
+volumes:
+  vendor-volume:
+  database-volume:
+
+services:
+  gateway:
+    volumes:
+      - ./src/api/:/var/www/api
+      - ./certs:/etc/ssl/certs
+    environment:
+      DOMAIN_NAME: "dev.local"
+      FRONTEND_PORT: "5173"
+
+  api:
+    volumes:
+      - ./src/api/:/var/www/html
+      - vendor-volume:/var/www/html/vendor
+    environment:
+      DB_PASSWORD: "sometimesguessed"
+
+  mysql:
+    volumes:
+      - database-volume:/var/lib/mysql
+    environment:
+      MYSQL_PASSWORD: "sometimesguessed"
+      MYSQL_ROOT_PASSWORD: "rarelyguessed"
+    ports:
+      - "3306:3306"

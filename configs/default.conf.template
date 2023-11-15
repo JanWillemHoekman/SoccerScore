@@ -1,0 +1,54 @@
+server {
+    listen 80;
+
+    server_name _;
+
+    return 301 https://$host$request_uri;
+}
+
+
+# server {
+#     listen 443 ssl;
+
+#     server_name soccerscore.${DOMAIN_NAME};
+
+#     error_log "/var/log/nginx/error.log" debug;
+
+#     ssl_certificate_key /etc/ssl/certs/${DOMAIN_NAME}/${DOMAIN_NAME}.key;
+#     ssl_certificate /etc/ssl/certs/${DOMAIN_NAME}/${DOMAIN_NAME}.crt;
+    
+#     location / {
+#         proxy_pass http://${FRONTEND_HOST}:${FRONTEND_PORT};
+#     }
+# }
+
+server {
+    listen 443 ssl;
+
+    server_name soccerscore-api.${DOMAIN_NAME};
+
+    ssl_certificate_key /etc/ssl/certs/${DOMAIN_NAME}/${DOMAIN_NAME}.key;
+    ssl_certificate /etc/ssl/certs/${DOMAIN_NAME}/${DOMAIN_NAME}.crt;
+
+    root /var/www/api/public;
+    index index.php index.html;
+
+    location / {
+    #     return 303 https://soccerscore.${DOMAIN_NAME}$request_uri;
+    # }
+
+    # location /api/ {
+        try_files $uri $uri/ /index.php?$query_string;
+        gzip_static on;
+    }
+
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass ${API_HOST}:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME /var/www/html/public$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+    }
+}
