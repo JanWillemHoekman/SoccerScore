@@ -1,11 +1,11 @@
 export interface Team {
     id: number;
-    name: String;
+    name: string;
 }
 
 export interface Season {
     id: number;
-    name: String;
+    name: string;
 }
 
 export interface Game {

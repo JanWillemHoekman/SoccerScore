@@ -83,12 +83,12 @@
         {#each seasons as season}
         <tr>
             <td>{season.name}</td>
-            <td><button on:click={deleteSeason(season.name)}>Delete</button></td>
+            <td><button on:click={() => deleteSeason(season.name)}>Delete</button></td>
         </tr>
         {/each}
     </table>
     <input bind:value={newSeasonName} />
-    <button on:click={createSeason(newSeasonName)}>Add season</button>
+    <button on:click={() => createSeason(newSeasonName)}>Add season</button>
     <h1>Games</h1>
     <table>
         <thead>
